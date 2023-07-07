@@ -1,6 +1,9 @@
 package com.dpr.loans.controller;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 @RestController
 public class LoansController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoansController.class);
+
     @Autowired
     private LoansRepository loansRepository;
 
@@ -29,8 +34,9 @@ public class LoansController {
     @PostMapping("/myLoans")
     public List<Loans> getLoansDetails(@RequestHeader("dpr-correlation-id") String correlationid,
             @RequestBody Customer customer) {
-        System.out.println("Invoking Loans Service");
+        logger.info("getLoansDetails() method started");
         List<Loans> loans = loansRepository.findByCustomerIdOrderByStartDtDesc(customer.getCustomerId());
+        logger.info("getLoansDetails() method ended");
         if (loans != null) {
             return loans;
         } else {
